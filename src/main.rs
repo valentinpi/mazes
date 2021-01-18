@@ -7,7 +7,7 @@ struct Point {
 }
 
 fn main() {
-    let n = 10000;
+    let n = 100;
     // All unvisited
     let mut maze: Maze = vec![vec![false; 2*n+1]; 2*n+1];
     maze[1][0] = true;
@@ -16,20 +16,20 @@ fn main() {
     maze[2*n-1][2*n] = true;
 
     make_maze(&mut maze, n as i64);
-    //print_maze(&maze);
+    print_maze(&maze);
 }
 
 // Aldous-Broder algorithm
 // Assume maze is quadratic
 fn make_maze(maze: &mut Maze, n: i64) {
     let mut p = Point { x: 1, y: 1 };
-    let mut unvisited: Vec<Point> = vec![Point { x: 1, y: 1 }];
+    let mut last: Vec<Point> = vec![Point { x: 1, y: 1 }];
 
     // Helper Closure
     let inside_maze = |x, y| x >= 0 && x <= 2*n && y >= 0 && y <= 2*n;
-    while !unvisited.is_empty() {
+    while !last.is_empty() {
         if maze[p.x as usize][p.y as usize] {
-            p = unvisited.pop().unwrap();
+            p = last.pop().unwrap();
         }
         maze[p.x as usize][p.y as usize] = true;
 
@@ -42,13 +42,13 @@ fn make_maze(maze: &mut Maze, n: i64) {
         if neighbors.is_empty() {
             continue;
         }
+        else {
+            last.push(p);
+        }
 
         let next = rand::random::<u64>() % (neighbors.len() as u64);
         let q = neighbors[next as usize];
         neighbors.remove(next as usize);
-        for neighbor in neighbors {
-            unvisited.push(neighbor);
-        }
 
         // Remove wall
              if q.x == p.x   && q.y == p.y-2 { maze[(p.x  ) as usize][(p.y-1) as usize] = true; }

@@ -1,5 +1,5 @@
 [package]
-name = "labyrinth"
+name = "mazes"
 version = "1.0.0"
 authors = ["valentinpi"]
 edition = "2018"
